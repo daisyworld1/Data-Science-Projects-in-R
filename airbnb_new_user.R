@@ -1,14 +1,11 @@
-install.packages("tidyr")
-install.packages("dplyr")
-install.packages("tidyverse")
-install.packages("RColorBrewer")
 library(tidyr)
 library(dplyr)
 library(tidyverse)
 library(RColorBrewer)
+library(cluster)
 
 #read in data
-setwd("C:/Users/Youzhu Shi/Dropbox/Springboard/Capstone data")
+setwd("~/Documents/R/final project")
 train_user <- read.csv(file="train_users_2.csv", header=TRUE, sep=",")
 
 #categorize different ages
@@ -66,7 +63,7 @@ train_user$device_type[is.na(train_user$device_type)] <- "others"
 #bring in the name of each language code. "language_code.csv" came from the google search
 language_code <- read.csv(file="language_code.csv",header=TRUE,sep=",")
 train_user <- left_join(train_user, language_code, by = "language", copy = "language_code")
-names(train_user)[names(train_user) == 'ï..language_full'] <- 'language_full'
+names(train_user)[names(train_user) == 'Ã¯..language_full'] <- 'language_full'
 
 #add primary_language to country_destination
 destination_language <-  data_frame(
@@ -142,7 +139,7 @@ str(train_lr)
 #what is the relationship between gender and whether someone booked any reservations.
 
 ctry.out <- glm(booked~age+gender,
-    data=train_lr, family="binomial")
+                data=train_lr, family="binomial")
 coef(summary(ctry.out))
 
 ctry.out.tab <- coef(summary(ctry.out))
@@ -158,7 +155,7 @@ cbind(predDat2, predict(ctry.out, type = "response",
 
 #what is the relationship between gender and whether someone booked reservations in the US.
 ctry.out2 <- glm(booked_US~age+gender,
-                data=train_lr, family="binomial")
+                 data=train_lr, family="binomial")
 coef(summary(ctry.out2))
 
 ctry.out.tab2 <- coef(summary(ctry.out2))
@@ -179,5 +176,75 @@ cbind(predDat3, predict(ctry.out2, type = "response",
 # and the dependent variable must be a boolean variable; therefore, I will explore clustering and ramdon forest.
 
 #Clustering
+#Before starting the analysis, our dataset need to be structured in a way that can be used.
+#create a column for each age_cat, gender, language, country_desination
 
+train5 <- subset(train, age >18 & age<=65 &  gender != "OTHER" & country_destination != 'US'& country_destination != 'NDF')
+train_cl <- cbind.data.frame(train5$age_cat,train5$gender,train5$country_destination)
+colnames(train_cl) <- c("age_cat", "gender",  "country_destination")
+summary(train_cl)
+train_cl <- tibble::rowid_to_column(train_cl, "ID")
 
+train_cl <- train_cl %>% 
+  mutate(TF = 1) %>% 
+  distinct %>% 
+  spread(age_cat,TF,fill = 0)
+
+train_cl <- train_cl %>% 
+  mutate(TF = 1) %>% 
+  distinct %>% 
+  spread(gender,TF,fill = 0)
+
+train_cl <- train_cl %>% 
+  mutate(TF = 1) %>% 
+  distinct %>% 
+  spread(country_destination,TF,fill = 0)
+
+View(train_cl)
+
+distances <- dist(train_cl, method = "euclidean")
+clusterTrain <- hclust(distances, method="ward")
+plot(clusterTrain)
+clusterGroups <- cutree(clusterTrain, k = 8) 
+tableCluster <- NULL
+for (i in 2:19) {
+   tableCluster <- rbind(tableCluster,tapply(train_cl[,i],clusterGroups, mean))
+}
+rnames <- as.vector(colnames(train_cl))
+rownames(tableCluster) <- rnames[2:19]
+tableCluster
+write.csv(tableCluster,file="tableCluster.csv")
+
+#Decision Trees
+#I'll use decision tree for our last machine learnng model
+
+#using CART model
+library(caTools)
+library(rpart.plot)
+set.seed(3000)
+train6 <- cbind.data.frame(train$age_cat,train$gender,train$language_full, train$country_destination,train$device_type, train$browser_type)
+colnames(train6) <- c("age_cat", "gender","language_full",  "country_destination", "device_type","browser_type" )
+train6 <- na.omit(train6)
+split <- sample.split(train6$country_destination, SplitRatio = 0.7)
+testing <- subset(train6, split == FALSE)
+training <- subset(train6, split == TRUE)
+trainTree <- rpart(country_destination ~ gender + age_cat + language_full + device_type + browser_type, data=training, method="class", control=rpart.control(minbucket=1000))
+prp(trainTree)
+PredictCART <- predict(trainTree, newdata=testing, type="class")
+table(testing$country_destination,PredictCART)
+
+#Random Forest
+library(randomForest)
+training$country_destination <- as.factor(training$country_destination)
+testing$country_destination <- as.factor(testing$country_destination)
+trainForest <- randomForest(country_destination ~ gender + age_cat + language_full + device_type + browser_type, data=training, nodesize=25, ntree=200)
+PredictForest <- predict(trainForest, newdata=testing)
+table(testing$country_destination, PredictForest)
+library(caret)
+library(e1071)
+fitControl <- trainControl(method="cv", number=10)
+cartGrid <- expand.grid(.cp=(1:50)*0.01)
+train(country_destination ~ gender + age_cat + language_full + device_type + browser_type, data=training, method="rpart", trControl=fitControl, tuneGrid=cartGrid)
+trainTreeCV <- rpart(country_destination ~ gender + age_cat + language_full + device_type + browser_type, method="class", data=training, control=rpart.control(cp=0.18))
+predictCV <- predict(trainTreeCV, newdata=testing, type="class")
+table(testing$country_destination, predictCV)
