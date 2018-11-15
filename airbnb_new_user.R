@@ -49,8 +49,8 @@ train_user$browser_type[is.na(train_user$browser_type)] <- "others"
 device_type <- train_user %>% 
   group_by(first_device_type) %>% 
   tally()
-arrange(devise_type,desc(n))
-sum(devise_type$n)
+arrange(device_type,desc(n))
+sum(device_type$n)
 
 device_table <-  data_frame(
   first_device_type = c("Mac Desktop","Windows Desktop", "iPhone", "iPad" , "Android Phone", "Android Tablet ","Desktop (Other)","SmartPhone (Other)"),
@@ -127,11 +127,10 @@ arrange(language1,desc(n))
 
 train_lr <- data.frame(as.numeric(train$age), as.factor(train$gender), as.numeric(train$time_diff) ,as.factor(train$language_full),train$country_destination)
 colnames(train_lr) <- c("age", "gender", "time_diff", "language", "country_destination")
-train_lr <- train_lr %>% filter(age > 18 & age <= 65)
-booked <- as.character(train_lr$country_destination)
-booked_US <- as.character(train_lr$country_destination)
-train_lr$booked <- booked <- as.numeric(ifelse(train_lr$country_destination=="NDF",1,0))
-train_lr$booked_US <- booked_US <- as.numeric(ifelse(train_lr$country_destination=="US",1,0))
+train_lr <- subset(train_lr, age > 18 & age <= 65)
+train_lr <- na.omit(train_lr)
+train_lr$booked <- as.numeric(ifelse(train_lr$country_destination=="NDF",1,0))
+train_lr$booked_US <- as.numeric(ifelse(train_lr$country_destination=="US",1,0))
 
 summary(train_lr)
 str(train_lr)
@@ -177,7 +176,7 @@ cbind(predDat3, predict(ctry.out2, type = "response",
 
 #Clustering
 #Before starting the analysis, our dataset need to be structured in a way that can be used.
-#create a column for each age_cat, gender, language, country_desination
+#I'll create a column for each age_cat, gender, language, country_desination
 
 train5 <- subset(train, age >18 & age<=65 &  gender != "OTHER" & country_destination != 'US'& country_destination != 'NDF')
 train_cl <- cbind.data.frame(train5$age_cat,train5$gender,train5$country_destination)
@@ -213,7 +212,6 @@ for (i in 2:19) {
 rnames <- as.vector(colnames(train_cl))
 rownames(tableCluster) <- rnames[2:19]
 tableCluster
-write.csv(tableCluster,file="tableCluster.csv")
 
 #Decision Trees
 #I'll use decision tree for our last machine learnng model
