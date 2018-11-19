@@ -27,7 +27,10 @@ names(train_user)
 
 Age and gender can be important contributing factors to the country someone decides to travel to. One of the other two categories is the time related: timestamp\_first\_active and date\_first\_booking. The two attributes may not be very useful if we analyze each one by itself. It can be if we find the difference between the two and create a new attribute time\_diff, which captures the number of day it takes for someone to make their first reservation after they first signed up as an user. Thet next group of attribute is related to users choice of techonology: signup\_app, signup\_method, affiliate\_provider, first\_browser, etc. These can be useful for marketing team for evaluating the effectiveness of marketing dollors. The last attribute I want to mention is language. Most users preferred language is English; however, for those whose primary language is not English, we can decide whether it has any correlation with the primary language of the country destination.
 
-We must know that there are limitation to our dataset. \* We do not know how many guests are traveling with the person making the booking. We do not know the gender and age of those guests. \* There are a lot of missing data for important attributes such as age and gender, which lead to varying sample sizes and predictibility. \* We can only determine the correlation not the causation the country destinaton. If the number of booking is low in a certain area, it could be due to the lack of supply in the country or the low quality of listings in the country.
+We must know that there are limitation to our dataset. 
+1.  We do not know how many guests are traveling with the person making the booking. We do not know the gender and age of those guests. 
+2. There are a lot of missing data for important attributes such as age and gender, which lead to varying sample sizes and predictibility. 
+3. We can only determine the correlation not the causation the country destinaton. If the number of booking is low in a certain area, it could be due to the lack of supply in the country or the low quality of listings in the country.
 
 Data Wrangling
 --------------
