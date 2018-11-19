@@ -198,9 +198,9 @@ Exploratory Data Analysis
 
 Because of the unique charateristics of the data, I will split the analysis to two sections. First, I will analyze all the data that are available to us. Second, I will parse out data for international country\_destination as they consist of a much small percentage of booking.
 
-#### Everywhere
+#####  Global
 
-#### Age Summary - Everywhere
+#### Age Summary - Global
 
 ``` r
 train <- read_csv2("train_user_clean.csv")
@@ -232,7 +232,7 @@ summary(train1$age)
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
     ##   19.00   28.00   33.00   35.71   41.00   65.00
 
-#### Age Plot - Everywhere
+#### Age Plot - Global
 
 ``` r
 ggplot(train1, aes(x = age, fill = country_destination)) + geom_histogram(binwidth = 1, position = "stack") + scale_fill_brewer(palette="Paired")
@@ -242,7 +242,7 @@ ggplot(train1, aes(x = age, fill = country_destination)) + geom_histogram(binwid
 
 The Age of guests and the number of booking made on Airbnb appear to be a right skewed distribution. After filtering out guests who are less than 18 years old or over 99 years old, the mean age is 36.6, and the median age is 34. It has a first quartile of 28 years old and a 3rd quartile of 42 years old. It is safe to say that majority of new users’ ages fall between late twenties and early forties. As people get older, they are less likely to make reservations on Airbnb. An outlier is around age 18 and 19, there’s a small spike on bookings, this is probably because after graduating high school, many students decide to travel before starting college. Regardless of age, traveling within in the US is the top choice.
 
-### Time - Everywhere
+### Time - Global
 
 We have wwo important time-related attributes - timestamp\_first\_active and date\_first\_booking. We are not considering date\_account\_created because this is the same date as timestamp\_first\_active. I created a column time\_diff to show the number of days for a user to make the first reservation after the date they are first active on Airbnb. You’ll find that more than 50% make their first booking in the first three days.
 
@@ -255,7 +255,7 @@ ggplot(train3, aes(x = time_diff, fill = country_destination)) + geom_bar(positi
 
 This graph appears to be a Poisson distribution. As time goes by, it is much less likely for someone to make a reservation on Airbnb.
 
-### Language - Everywhere
+### Language - Global
 
 The next attribute I want to explore is the language preference of new user. English is chosen by more than 97% users to display on Airbnb. This doesn’t mean it is the primary language spoken by Airbnb users.
 
@@ -329,7 +329,7 @@ arrange(language1,desc(n))
     ## 10 Portuguese            54
     ## # ... with 13 more rows
 
-### International
+### Outside of US
 
 Now, let’s take a look at those who chose countries outside of the US. What are their characteristics?
 
@@ -350,7 +350,7 @@ ggplot(train2,aes(x = age, fill = country_destination)) + geom_histogram(binwidt
 
 Country preferences appear fairly consistent amount different ages.
 
-#### Age Category - International
+#### Age Category - Outside of US
 
 What if we put age into five different brackets, will that show us a clearer picture?
 
@@ -362,7 +362,7 @@ ggplot(train2, aes(x = age_cat , fill = country_destination)) + geom_bar(positio
 
 Spain is more popular among younger users; the opposite is true for Great Britain. Canada is more popular among middle aged users, this is probably because people who are in their working age do more business travels between the two countries as US and Canada have very close trade relations. They are more likely to work in the other country instead of where they are originally from.
 
-### Gender - International
+### Gender - Outside of US
 
 Let’s take a look at gender. Which gender is represent a higher percentage of users who made their first bookings on Airbnb?
 
@@ -375,7 +375,7 @@ ggplot(train2_1, aes(x = gender, fill = country_destination)) + geom_bar() +  sc
 
 There are more female users than male users. It appears that female users have a much stronger preference for France.
 
-#### Age & Gender - International
+#### Age & Gender - Outside of US
 
 What if we combine age ca tegory and gender to create a new variable gender\_age, will that provide us some unique insights?
 
@@ -387,7 +387,7 @@ ggplot(train2_1, aes(x = gender_age, fill = country_destination)) + geom_bar(pos
 
 Both females and males are less likely to travel to Spain as they age, males show a stronger correlation. Both females and males are more likely to travel to Great Britain as they get older, females show a stronger correlation.
 
-#### The Big Picture - Age & Gender - International
+#### The Big Picture - Age & Gender - Outside of US
 
 ``` r
 ggplot(train2_1 , aes(x = gender, y = age)) + geom_jitter(alpha = 0.2, width = 0.35 ) + facet_wrap(~country_destination)
@@ -397,7 +397,7 @@ ggplot(train2_1 , aes(x = gender, y = age)) + geom_jitter(alpha = 0.2, width = 0
 
 This facet grid reaffirmed us of our previous analysis. It does provide us additional information. The travel age for males is slight high than the travel age for female. This tendency appears strong in Great Britain, Germany, and France.
 
-### Choice of Technology (Device, Browser, OS) - International
+### Choice of Technology (Device, Browser, OS) - Outside of US
 
 After exploring age and gender, we can take a look at devise type, browser type, and signup methods. Do people use different browser type have different preference?
 
