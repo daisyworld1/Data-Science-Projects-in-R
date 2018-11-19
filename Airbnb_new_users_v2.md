@@ -703,6 +703,6 @@ In 2015, I would have made the following suggestion based on the analysis I've d
 
 2. Focus on China. Chinese is the second most used language by Airbnb users, which signifies the populariy of Airbnb among Chinese users. As China's economy continues to grow and Chinese citizens become increasing wealthy and more accustomed to the sharing economy. There's a huge business opportunity to expand business there before local competition monopolizing the market. 
 
-3.Continue to put an effort on strenthening the US booking while also making suggestion in popular European destination when someone chose English as their primary language. If language chosen is not Engilish, make suggestion in countries using the same language as the user in additional to US listings.
+3. Continue to put an effort on strenthening the US booking while also making suggestion in popular European destination when someone chose English as their primary language. If language chosen is not Engilish, make suggestion in countries using the same language as the user in additional to US listings.
 
 As Airbnb increase its user base and collect more relevant search result, more meaningful and accurate prediction will be possible.
