@@ -691,7 +691,7 @@ table(testing$country_destination,PredictCART)
     ##   PT        8
     ##   US     2654
 
-As you can see from the decision tree, the model is only able to predict two outcomes. This is largely due to the fact that the dataset is unbalanced.
+As you can see from the decision tree, the model is only able to predict two outcomes. This is largely due to the fact that the dataset is unbalanced. The model predicted the country_destination correctly 60% of the time. 
 
 ### Conclusion
 
