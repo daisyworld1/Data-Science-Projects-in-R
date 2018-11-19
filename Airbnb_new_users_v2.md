@@ -189,6 +189,10 @@ train_user$language_combo = as.factor(paste(train_user$language_full,"-", train_
 
 Last but not least, the difference between date\_account\_created and date\_first\_booking is created as a new attribute to examine how long it will take someone to make a book after they signup.
 
+``` r
+train_user$time_diff <- as.Date(train_user$date_first_booking,"%Y-%m-%d") - as.Date(train_user$date_account_created,"%Y-%m-%d")
+```
+
 Exploratory Data Analysis
 -------------------------
 
