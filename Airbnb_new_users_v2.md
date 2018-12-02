@@ -8,7 +8,7 @@ Introduction
 
 Airbnb is an online market place for home rentals. It was founded in 2008, since then, it has had exponential growth. Airbnb has become a serious competitor and a threat to the hotel industry. You can find Airbnb listings in most cities and countries in different styles and price points. When it first started, people use it for personal travel to save money or when no hotel rooms are not available. Nowaday, people still use it for that purpose, but more importantly, a lot of people see it as the first choice, because it has what hotels can't offer: a sense of home.
 
-The goal of this analysis is to provide insignts in to Airbnb's new user base. The data was originally posted by Airbnb for Kaggle Competition in 2015. Even if it is three years old, it still provides us some insignts into Airbnb user profiles and destination preferences.
+The goal of this analysis is to provide insights in to Airbnb's new user base. The data was originally posted by Airbnb for Kaggle Competition in 2015. Even if it is three years old, it still provides us some insights into Airbnb user profiles and destination preferences.
 
 Let's take a quick look at the data. What important fields are available to us to analyze?
 
