@@ -261,7 +261,7 @@ The next attribute I want to explore is the language preference of new user. Eng
 
 For those people who did choose other languages to display may give us some additional knowledge of the ethnicity or the country of origin of Airbnb users. Chinese is the second most used language on Airbnb. At the same time, top destination for these Chinese users is others, which means the destination countries they chose are not US or popular European counties.
 
-The third and fourth language chosen are French and Spanish. And both groups of users preferred countries that have English as primary language. If we dig deeper in their second choice of country destinaton. These second choices tend to have a primary language that is the same as the user's language. This is true for French, German and Italian users. We don't know if this is the case for Chinses or Spanish users; however, they second most preferred destination is other, which could very well be a country with the same spoken language as the user's.
+The third and fourth language chosen are French and Spanish. And both groups of users preferred countries that have English as primary language. If we dig deeper in their second choice of country destination. These second choices tend to have a primary language that is the same as the user's language. This is true for French, German and Italian users. We don't know if this is the case for Chineses or Spanish users; however, they second most preferred destination is other, which could very well be a country with the same spoken language as the user's.
 
 ``` r
 train4 <- train1 %>% filter(country_destination != "NDF")
