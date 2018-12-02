@@ -196,7 +196,7 @@ train_user$time_diff <- as.Date(train_user$date_first_booking,"%Y-%m-%d") - as.D
 Exploratory Data Analysis
 -------------------------
 
-Because of the unique charateristics of the data, I will split the analysis to two sections. First, I will analyze all the data that are available to us. Second, I will parse out data for international country\_destination as they consist of a much small percentage of booking.
+Because of the unique charateristics of the data, I will split the analysis to two sections. First, I will analyze all the data that are available to us. Second, I will parse out data for international country\_destination as they consist of a much smaller percentage of the bookings.
 
 #####  Global
 
