@@ -25,19 +25,19 @@ names(train_user)
     ## [13] "signup_app"              "first_device_type"      
     ## [15] "first_browser"           "country_destination"
 
-Age and gender can be important contributing factors to the country someone decides to travel to. One of the other two categories is the time related: timestamp\_first\_active and date\_first\_booking. The two attributes may not be very useful if we analyze each one by itself. It can be if we find the difference between the two and create a new attribute time\_diff, which captures the number of day it takes for someone to make their first reservation after they first signed up as an user. Thet next group of attribute is related to users choice of techonology: signup\_app, signup\_method, affiliate\_provider, first\_browser, etc. These can be useful for marketing team for evaluating the effectiveness of marketing dollors. The last attribute I want to mention is language. Most users preferred language is English; however, for those whose primary language is not English, we can decide whether it has any correlation with the primary language of the country destination.
+Age and gender can be important contributing factors to the country someone decides to travel to. One of the other two categories is the time related: timestamp\_first\_active and date\_first\_booking. The two attributes may not be very useful if we analyze each one by itself. It can be if we find the difference between the two and create a new attribute time\_diff, which captures the number of day it takes for someone to make their first reservation after they first signed up as a user. Thet next group of attribute is related to users choice of technology: signup\_app, signup\_method, affiliate\_provider, first\_browser, etc. These can be useful for marketing team for evaluating the effectiveness of marketing dollars. The last attribute I want to mention is language. Most users preferred language is English; however, for those whose primary language is not English, we can decide whether it has any correlation with the primary language of the country destination.
 
-We must know that there are limitation to our dataset. 
+We must know that there are limitations to our dataset. 
 1.  We do not know how many guests are traveling with the person making the booking. We do not know the gender and age of those guests. 
-2. There are a lot of missing data for important attributes such as age and gender, which lead to varying sample sizes and predictibility. 
-3. We can only determine the correlation not the causation the country destinaton. If the number of booking is low in a certain area, it could be due to the lack of supply in the country or the low quality of listings in the country.
+2. There are a lot of missing data for important attributes such as age and gender, which lead to varying sample sizes and predictability. 
+3. We can only determine the correlation not the causation the country destination. If the number of booking is low in a certain area, it could be due to the lack of supply in the country or the low quality of listings in the country.
 
 Data Wrangling
 --------------
 
 In order to prepare the dataset for analysis, I have cleaned and wrangled the dataset which are described in detail below.
 
-In the age attribute, there are lots of numbers that fall out of a reasonable range. Many people have entered their year of birth instead of age. For those intances, I have calculated their ages in the year of 2015. Additionally, to make it eaiser to analyze, I placed different ages in groups.
+In the age attribute, there are lots of numbers that fall out of a reasonable range. Many people have entered their year of birth instead of age. For those instances, I have calculated their ages in the year of 2015. Additionally, to make it easier to analyze, I placed different ages in groups.
 
 ``` r
 age_cat <- as.numeric(train_user$age)
@@ -56,7 +56,7 @@ train_user$age_cat <- ifelse(train_user$age_cat == 7, "below 18", train_user$age
 train_user$age_cat <- ifelse(train_user$age_cat == -1, "-unknown-", train_user$age_cat)
 ```
 
-Now that we have categorized ages, it becomes easier to combine with gender and create a new varaiable to analyze: age\_gender.
+Now that we have categorized ages, it becomes easier to combine with gender and create a new variable to analyze: age\_gender.
 
 ``` r
 train_user$gender_age = as.character(paste(train_user$gender, train_user$age_cat))
