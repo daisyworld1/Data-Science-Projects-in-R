@@ -198,7 +198,7 @@ Exploratory Data Analysis
 
 Because of the unique characteristics of the data, I will split the analysis to two sections. First, I will analyze all the data that are available to us. Second, I will parse out data for international country\_destination as they consist of a much smaller percentage of the bookings.
 
-#####  Global
+###  Global
 
 #### Age Summary - Global
 
