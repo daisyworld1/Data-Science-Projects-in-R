@@ -445,9 +445,9 @@ Machine Learning
 
 ### Logistic Regression
 
-I will make predicitons using three machine learning techniques: logistic regression, decision trees, and clustering. First, I'll explore logistic regression.
+I will make predictions using three machine learning techniques: logistic regression, decision trees, and clustering. First, I'll explore logistic regression.
 
-Before make the predicton, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attrites that are relavant to predicting the destination country.
+Before make the prediction, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attrites that are relavant to predicting the destination country.
 
 ``` r
 train_lr <- data.frame(as.numeric(train$age), as.factor(train$gender), as.numeric(train$time_diff) ,as.factor(train$language_full),train$country_destination)
