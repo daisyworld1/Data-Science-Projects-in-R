@@ -545,7 +545,7 @@ cbind(predDat3, predict(ctry.out2, type = "response",
     ## 3      MALE 35.71075 0.3689120 0.002192325              1
     ## 4     OTHER 35.71075 0.4673780 0.033745283              1
 
-This logistic regression tells us that when someone chose an gender, either Male or Female, they are 20% more likely to book a reservation regardless of country. If someone selected other or -unknown- gender, they are at least 10% more likely to make a reservation in the US. This method has a lot of limitations in terms of prediciting country, we can only have one categorical variable, and the dependent variable must be a boolean variable; however, further analysis can be done by swapping the variables in the expand.grid functoin to find outcomes for different input variables.
+This logistic regression tells us that when someone chose an gender, either Male or Female, they are 20% more likely to book a reservation regardless of country. If someone selected other or -unknown- gender, they are at least 10% more likely to make a reservation in the US. This method has a lot of limitations in terms of predicting country, we can only have one categorical variable, and the dependent variable must be a boolean variable; however, further analysis can be done by swapping the variables in the expand.grid function to find outcomes for different input variables.
 
 ### Clustering
 
