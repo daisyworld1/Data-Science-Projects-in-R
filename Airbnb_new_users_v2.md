@@ -450,8 +450,8 @@ I will make predictions using three machine learning techniques: logistic regres
 Before make the prediction, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attributes that are relevant to predicting the destination country.
 
 ``` r
-train_lr <- data.frame(as.numeric(train$age), as.factor(train$gender), as.numeric(train$time_diff) ,as.factor(train$language_full),train$country_destination)
-colnames(train_lr) <- c("age", "gender", "time_diff", "language", "country_destination")
+train_lr <- data.frame(as.numeric(train$age), as.factor(train$gender),as.factor(train$language_full),train$country_destination)
+colnames(train_lr) <- c("age", "gender", "language", "country_destination")
 train_lr <- train_lr %>% filter(age > 18 & age <= 65)
 booked <- as.character(train_lr$country_destination)
 booked_US <- as.character(train_lr$country_destination)
