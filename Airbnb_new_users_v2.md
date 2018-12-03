@@ -670,33 +670,20 @@ table(testing$country_destination,PredictCART)
 ```
 
     ##        PredictCART
-    ##            AU    CA    DE    ES    FR    GB    IT   NDF    NL other    PT
-    ##   AU        0     0     0     0     0     0     0   148     0     0     0
-    ##   CA        0     0     0     0     0     0     0   365     0     0     0
-    ##   DE        0     0     0     0     0     0     0   271     0     0     0
-    ##   ES        0     0     0     0     0     0     0   583     0     0     0
-    ##   FR        0     0     0     0     0     0     0  1320     0     0     0
-    ##   GB        0     0     0     0     0     0     0   610     0     0     0
-    ##   IT        0     0     0     0     0     0     0   749     0     0     0
-    ##   NDF       0     0     0     0     0     0     0 35953     0     0     0
-    ##   NL        0     0     0     0     0     0     0   196     0     0     0
-    ##   other     0     0     0     0     0     0     0  2628     0     0     0
-    ##   PT        0     0     0     0     0     0     0    57     0     0     0
-    ##   US        0     0     0     0     0     0     0 16059     0     0     0
-    ##        PredictCART
-    ##            US
-    ##   AU       14
-    ##   CA       63
-    ##   DE       47
-    ##   ES       92
-    ##   FR      187
-    ##   GB       87
-    ##   IT      102
-    ##   NDF    1410
-    ##   NL       33
-    ##   other   400
-    ##   PT        8
-    ##   US     2654
+    ##            AU    CA    DE    ES    FR    GB    IT   NDF    NL other    PT    US
+    ##   AU        0     0     0     0     0     0     0   148     0     0     0    14
+    ##   CA        0     0     0     0     0     0     0   365     0     0     0    63
+    ##   DE        0     0     0     0     0     0     0   271     0     0     0    47
+    ##   ES        0     0     0     0     0     0     0   583     0     0     0    92
+    ##   FR        0     0     0     0     0     0     0  1320     0     0     0   187
+    ##   GB        0     0     0     0     0     0     0   610     0     0     0    87
+    ##   IT        0     0     0     0     0     0     0   749     0     0     0   102
+    ##   NDF       0     0     0     0     0     0     0 35953     0     0     0  1410
+    ##   NL        0     0     0     0     0     0     0   196     0     0     0    33
+    ##   other     0     0     0     0     0     0     0  2628     0     0     0   400
+    ##   PT        0     0     0     0     0     0     0    57     0     0     0     8
+    ##   US        0     0     0     0     0     0     0 16059     0     0     0  2654
+
 
 As you can see from the decision tree, the model is only able to predict two outcomes. This is largely due to the fact that the dataset is unbalanced. The model predicted the country_destination correctly 60% of the time. 
 
