@@ -6,9 +6,11 @@ Youzhu Shi
 Introduction
 ------------
 
-Airbnb is an online market place for home rentals. It was founded in 2008, since then, it has had exponential growth. Airbnb has become a serious competitor and a threat to the hotel industry. You can find Airbnb listings in most cities and countries in different styles and price points. When it first started, people use it for personal travel to save money or when no hotel rooms are not available. Nowaday, people still use it for that purpose, but more importantly, a lot of people see it as the first choice, because it has what hotels can't offer: a sense of home.
+Airbnb is an online market place for home rentals. It was founded in 2008, since then, it has had exponential growth. Airbnb has become a serious competitor and a threat to the hotel industry. 
 
-The goal of this analysis is to provide insights in to Airbnb's new user base. The data was originally posted by Airbnb for Kaggle Competition in 2015. Even if it is three years old, it still provides us some insights into Airbnb user profiles and destination preferences.
+You can find Airbnb listings in most cities and countries in different styles and price points. When it first started, people use it for personal travel to save money or when no hotel rooms are available. Nowadays, people still use it for that purpose, but more importantly, a lot of people see it as the first choice, because it has what hotels can't offer - a sense of home.
+
+The goal of this analysis is to provide insights into Airbnb's new user base. The data was originally posted by Airbnb for Kaggle Competition in 2015. Even if it is three years old, it provides insights into Airbnb user profiles and destination preference at the time.
 
 Let's take a quick look at the data. What important fields are available to us to analyze?
 
@@ -25,9 +27,10 @@ names(train_user)
     ## [13] "signup_app"              "first_device_type"      
     ## [15] "first_browser"           "country_destination"
 
-Age and gender can be important contributing factors to the country someone decides to travel to. One of the other two categories is the time related: timestamp\_first\_active and date\_first\_booking. The two attributes may not be very useful if we analyze each one by itself. It can be if we find the difference between the two and create a new attribute time\_diff, which captures the number of day it takes for someone to make their first reservation after they first signed up as a user. Thet next group of attribute is related to users choice of technology: signup\_app, signup\_method, affiliate\_provider, first\_browser, etc. These can be useful for marketing team for evaluating the effectiveness of marketing dollars. The last attribute I want to mention is language. Most users preferred language is English; however, for those whose primary language is not English, we can decide whether it has any correlation with the primary language of the country destination.
+Age and gender can be important contributing factors to the country someone decides to travel to. One of the other two categories is the time related: timestamp_first_active and date_first_booking. The two attributes may not be very useful if we analyze each one by itself. It can be if we find the difference between the two and create a new attribute time\_diff, which captures the number of days it takes for someone to make their first reservation after they first signed up as a user. The next group of attribute is related to users choice of technology: signup_app, signup_method, affiliate_provider, first_browser, etc. These can be useful for marketing team for evaluating the effectiveness of marketing dollars. The last attribute I want to mention is language. Most users preferred language is English; however, for those whose primary language is not English, we can decide whether it has any relationship with the primary language of the country destination.
 
 We must know that there are limitations to our dataset. 
+
 1.  We do not know how many guests are traveling with the person making the booking. We do not know the gender and age of those guests. 
 2. There are a lot of missing data for important attributes such as age and gender, which lead to varying sample sizes and predictability. 
 3. We can only determine the correlation not the causation the country destination. If the number of booking is low in a certain area, it could be due to the lack of supply in the country or the low quality of listings in the country.
@@ -35,9 +38,8 @@ We must know that there are limitations to our dataset.
 Data Wrangling
 --------------
 
-In order to prepare the dataset for analysis, I have cleaned and wrangled the dataset which are described in detail below.
-
-In the age attribute, there are lots of numbers that fall out of a reasonable range. Many people have entered their year of birth instead of age. For those instances, I have calculated their ages in the year of 2015. Additionally, to make it easier to analyze, I placed different ages in groups.
+In order to prepare the dataset for analysis, I have cleaned and wrangled the dataset. The process is described in detail below.
+In the age attribute, there are a lot of numbers that fell out of a reasonable range. Many people have entered their year of birth instead of age. For those instances, I have calculated their ages in the year of 2015. Additionally, to make it easier to analyze, I placed different ages in groups.
 
 ``` r
 age_cat <- as.numeric(train_user$age)
@@ -164,7 +166,7 @@ train_user <- left_join(train_user, language_code, by = "language", copy = "lang
     ## Warning: Column `language` joining factors with different levels, coercing
     ## to character vector
 
-We can potentially examine the relationship between the primary language of a user and the primary language of a country destination; thereby, a new attribute that represents the primary language the country destination is added to the train\_user table.
+We can potentially examine the relationship between the primary language of a user and the primary language of a country destination; thereby, a new attribute (destination_language) that represents the primary language of the country_destination is added to the train\_user table.
 
 ``` r
 destination_language <-  data_frame(
@@ -181,13 +183,13 @@ train_user <- left_join(train_user, destination_language, by = "country_destinat
 train_user$country_primary_language [is.na(train_user$country_primary_language)] <- "others"
 ```
 
-We will create a new variable that combine the primary language of a user and the primary language of a country destination to see if there's a link between the two.
+We will create a new variable that combines the primary language of a user and the primary language of a country destination to see if there's a link between the two.
 
 ``` r
 train_user$language_combo = as.factor(paste(train_user$language_full,"-", train_user$country_primary_language))
 ```
 
-Last but not least, the difference between date\_account\_created and date\_first\_booking is created as a new attribute to examine how long it will take someone to make a book after they signup.
+Last but not least, the difference between date\_account\_created and date\_first\_booking is created as a new attribute to examine how long it will take someone to make a booking after they first sign up.
 
 ``` r
 train_user$time_diff <- as.Date(train_user$date_first_booking,"%Y-%m-%d") - as.Date(train_user$date_account_created,"%Y-%m-%d")
@@ -196,7 +198,15 @@ train_user$time_diff <- as.Date(train_user$date_first_booking,"%Y-%m-%d") - as.D
 Exploratory Data Analysis
 -------------------------
 
-Because of the unique characteristics of the data, I will split the analysis to two sections. First, I will analyze all the data that are available to us. Second, I will parse out data for international country\_destination as they consist of a much smaller percentage of the bookings.
+Because of the unique characteristics of the data, I will split the analysis into two sections. 
+
+First, I will analyze all the data that are available globally.
+
+Second, I will parse out data for international country_destination as they consist of a much smaller percentage of the bookings.
+
+I will create plots using important attributes discussed previously.
+
+The first attribute I will look at is age. Since I don’t have clean data for the age attribute we will create a subset of age to only include someone whose age is between 18 to 65. Then, we will take a look at the summary of the age attribute to get a general sense of the data.
 
 ###  Global
 
@@ -240,11 +250,11 @@ ggplot(train1, aes(x = age, fill = country_destination)) + geom_histogram(binwid
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train1-2-1.png)
 
-The Age of guests and the number of booking made on Airbnb appear to be a right skewed distribution. After filtering out guests who are less than 18 years old or over 99 years old, the mean age is 36.6, and the median age is 34. It has a first quartile of 28 years old and a 3rd quartile of 42 years old. It is safe to say that majority of new users’ ages fall between late twenties and early forties. As people get older, they are less likely to make reservations on Airbnb. An outlier is around age 18 and 19, there’s a small spike on bookings, this is probably because after graduating high school, many students decide to travel before starting college. Regardless of age, traveling within in the US is the top choice.
+The Age of guests and the number of bookings made on Airbnb appear to be a right skewed distribution. After filtering out guests who are younger than 18 years old or older than 99 years old, the mean age is 36.6, and the median age is 34. It has a first quartile of 28 years old and a 3rd quartile of 42 years old. The majority of new users’ ages fall between late twenties and early forties. As people get older, they are less likely to make reservations on Airbnb. There is a small peak  around age 18 and 19. Regardless of age, traveling within in the US is the top choice.
 
 ### Time - Global
 
-We have two important time-related attributes - timestamp\_first\_active and date\_first\_booking. We are not considering date\_account\_created because this is the same date as timestamp\_first\_active. I created a column time\_diff to show the number of days for a user to make the first reservation after the date they are first active on Airbnb. You’ll find that more than 50% make their first booking in the first three days.
+We have two important time-related attributes - timestamp\_first\_active and date\_first\_booking. We are not considering date_account_created because this is the same date as timestamp\_first\_active. I created a column time_diff to show the number of days for a user to make the first reservation after the date they are first active on Airbnb. You’ll find that more than 50% of users make their first booking in the first three days. This graph appears to be a Poisson distribution. As time goes by, it is much less likely for someone to make a reservation on Airbnb.
 
 ``` r
 train3 <- train %>% filter(time_diff >= 0)
@@ -257,11 +267,12 @@ This graph appears to be a Poisson distribution. As time goes by, it is much les
 
 ### Language - Global
 
-The next attribute I want to explore is the language preference of new user. English is chosen by more than 97% users to display on Airbnb. This doesn’t mean it is the primary language spoken by Airbnb users.
+The next attribute I want to explore is the language preference of a new user. English is chosen by more than 97% users to display on Airbnb. This doesn’t mean it is the primary language spoken by Airbnb users.
 
-For those people who did choose other languages to display may give us some additional knowledge of the ethnicity or the country of origin of Airbnb users. Chinese is the second most used language on Airbnb. At the same time, top destination for these Chinese users is others, which means the destination countries they chose are not US or popular European counties.
+Chinese is the second most used language on Airbnb. The third and fourth languages chosen are French and Spanish
 
-The third and fourth language chosen are French and Spanish. And both groups of users preferred countries that have English as primary language. If we dig deeper in their second choice of country destination. These second choices tend to have a primary language that is the same as the user's language. This is true for French, German and Italian users. We don't know if this is the case for Chineses or Spanish users; however, they second most preferred destination is other, which could very well be a country with the same spoken language as the user's.
+For those people who did choose other languages to display may give us some more knowledge on the ethnicity or the country of origin of Airbnb users. Chinese is the second most used language on Airbnb. At the same time, top destination for these Chinese users is others, which means the destination countries they chose are not US or popular European counties.
+The third and fourth language chosen are French and Spanish. And both groups of users preferred countries that have English as their primary language. If we dig deeper in their second choice of country destination. These second choices tend to have a primary language that is the same as the user's language. This is true for French, German and Italian users. We don't know if this is the case for Chineses or Spanish users; however, they second most preferred destination is others, which could indicate a country with the same spoken language as the user’s.
 
 ``` r
 train4 <- train1 %>% filter(country_destination != "NDF")
@@ -331,7 +342,9 @@ arrange(language1,desc(n))
 
 ### Outside of US
 
-Now, let’s take a look at those who chose countries outside of the US. What are their characteristics?
+Now, we will take a look at oversea destinations. What are the characteristics of people who made reservations outside of the US?
+
+France is the most popular destination followed by Italy and Great Britain.
 
 ``` r
 train2 <- train1 %>% filter(country_destination != "US" & country_destination!= "NDF" & country_destination != "other")
@@ -348,11 +361,11 @@ ggplot(train2,aes(x = age, fill = country_destination)) + geom_histogram(binwidt
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2-2-1.png)
 
-Country preferences appear fairly consistent amount different ages.
+Country preferences appear fairly consistent among different ages.
 
 #### Age Category - Outside of US
 
-What if we put age into five different brackets, will that show us a clearer picture?
+What if we put age into five different buckets, will that show us a clearer picture?
 
 ``` r
 ggplot(train2, aes(x = age_cat , fill = country_destination)) + geom_bar(position = "fill") + theme(axis.text.x = element_text(angle = 25)) + scale_fill_brewer(palette="Paired")
@@ -360,7 +373,7 @@ ggplot(train2, aes(x = age_cat , fill = country_destination)) + geom_bar(positio
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2-3-1.png)
 
-Spain is more popular among younger users; the opposite is true for Great Britain. Canada is more popular among middle aged users, this is probably because people who are in their working age do more business travels between the two countries as US and Canada have very close trade relations. They are more likely to work in the other country instead of where they are originally from.
+Spain is more popular among younger users; the opposite is true for Great Britain. Canada is more popular among middle-aged users.
 
 ### Gender - Outside of US
 
@@ -373,11 +386,11 @@ ggplot(train2_1, aes(x = gender, fill = country_destination)) + geom_bar() +  sc
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2_1-1-1.png)
 
-There are more female users than male users. It appears that female users have a much stronger preference for France.
+There are more female users than male users. It appears that female users have a much stronger preference for France. 
 
 #### Age & Gender - Outside of US
 
-What if we combine age ca tegory and gender to create a new variable gender\_age, will that provide us some unique insights?
+What if we combine age category and gender to create a new variable gender_age, will that provide us some unique insights?
 
 ``` r
 ggplot(train2_1, aes(x = gender_age, fill = country_destination)) + geom_bar(position = "fill") + theme(axis.text.x = element_text(angle = 90)) + scale_fill_brewer(palette="Paired")
@@ -385,7 +398,7 @@ ggplot(train2_1, aes(x = gender_age, fill = country_destination)) + geom_bar(pos
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2_1-2-1.png)
 
-Both females and males are less likely to travel to Spain as they age, males show a stronger correlation. Both females and males are more likely to travel to Great Britain as they get older, females show a stronger correlation.
+Both female and male are less likely to travel to Spain as they age, males show a stronger correlation. Both females and males are more likely to travel to Great Britain as they get older, females show a stronger correlation.
 
 #### The Big Picture - Age & Gender - Outside of US
 
@@ -395,11 +408,11 @@ ggplot(train2_1 , aes(x = gender, y = age)) + geom_jitter(alpha = 0.2, width = 0
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2_1-3-1.png)
 
-This facet grid reaffirmed us of our previous analysis. It does provide us additional information. The travel age for males is slight high than the travel age for female. This tendency appears strong in Great Britain, Germany, and France.
+This facet grid reaffirmed us of our previous analysis. It does provide us additional information. The travel age for males is slight high than the travel age for female. This tendency appears strong in Great Britain, Germany, and France. 
 
 ### Choice of Technology (Device, Browser, OS) - Outside of US
 
-After exploring age and gender, we can take a look at devise type, browser type, and signup methods. Do people use different browser type have different preference?
+After exploring age and gender, we can take a look at devise type, browser type, and signup methods. Do people use different browser type have different preference? 
 
 ``` r
 ggplot(train2, aes(x = device_type, fill = country_destination)) + geom_bar(position = "fill") + scale_fill_brewer(palette="Paired")
@@ -438,16 +451,15 @@ ggplot(train2, aes(x = signup_app, fill = country_destination)) + geom_bar(posit
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2-4-6.png)
 
-It does not seem like there’s a strong correlation between device type / signup\_app / browser type and country destination. Android users does show different proportion of country of destination; however, since the total population is a so small compared to other signup app, the difference should be disregarded.
+It does not seem like there’s a strong correlation between device type / signup\_app / browser type and country destination. Android users does show different proportion of country of destination; however, since the total number of users is not statistically significant.
 
 Machine Learning
 ----------------
 
 ### Logistic Regression
 
-I will make predictions using three machine learning techniques: logistic regression, decision trees, and clustering. First, I'll explore logistic regression.
-
-Before make the prediction, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attributes that are relevant to predicting the destination country.
+Before make the prediction, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attributes that are relevant to predicting the country_destination.
+By using logistic regression, we can find relationships between two variable where the predicted variable is binomial while holding other variables constant. In this case, I will explore the relationship between gender and the country_destination.
 
 ``` r
 train_lr <- data.frame(as.numeric(train$age), as.factor(train$gender),as.factor(train$language_full),train$country_destination)
@@ -459,7 +471,7 @@ train_lr$booked <- booked <- as.numeric(ifelse(train_lr$country_destination=="ND
 train_lr$booked_US <- booked_US <- as.numeric(ifelse(train_lr$country_destination=="US",1,0))
 ```
 
-What is the relationship between gender and whether someone booked any reservations.
+What is the relationship between gender and whether someone booked any reservations?
 
 ``` r
 ctry.out <- glm(booked~age+gender,
@@ -502,7 +514,7 @@ cbind(predDat2, predict(ctry.out, type = "response",
     ## 3      MALE 35.71075 0.4784186 0.002269629              1
     ## 4     OTHER 35.71075 0.2770042 0.030205217              1
 
-What is the relationship between gender and whether someone booked reservations in the US.
+What is the relationship between gender and whether someone booked reservations in the US?
 
 ``` r
 ctry.out2 <- glm(booked_US~age+gender,
@@ -545,106 +557,14 @@ cbind(predDat3, predict(ctry.out2, type = "response",
     ## 3      MALE 35.71075 0.3689120 0.002192325              1
     ## 4     OTHER 35.71075 0.4673780 0.033745283              1
 
-This logistic regression tells us that when someone chose a gender, either Male or Female, they are 20% more likely to book a reservation regardless of country. If someone selected other or -unknown- gender, they are at least 10% more likely to make a reservation in the US. This method has a lot of limitations in terms of predicting country, we can only have one categorical variable, and the dependent variable must be a boolean variable; however, further analysis can be done by swapping the variables in the expand.grid function to find outcomes for different input variables.
+This logistic regression result tells us that when someone chose a gender, either Male or Female, they are 20% more likely to book a reservation regardless of country. If someone selected other or -unknown- gender, they are at least 10% more likely to make a reservation in the US. This method has a lot of limitations in terms of predicting a country, we can only have one categorical variable, and the dependent variable must be a boolean variable; however, further analysis can be done by swapping the variables in the expand.grid function to find outcomes for different input variables. 
+Because of the limitation of the way variables can be used in the logistic regression model,  I will attempt to use random forest to make predictions.
 
-### Clustering
-
-Before starting the analysis, our dataset need to be structured in a way that can be used. I'll create a column for each age\_cat, gender, language, country\_desination. "US" and "NDF" are removed from the rows in country\_destination column, so we can focus on countries that are overseas.
-
-``` r
-train5 <- subset(train, age >18 & age<=65 &  gender != "OTHER" & country_destination != 'US'& country_destination != 'NDF')
-train_cl <- cbind.data.frame(train5$age_cat,train5$gender,train5$country_destination)
-colnames(train_cl) <- c("age_cat", "gender",  "country_destination")
-train_cl <- tibble::rowid_to_column(train_cl, "ID")
-
-train_cl <- train_cl %>% 
-  mutate(TF = 1) %>% 
-  distinct %>% 
-  spread(age_cat,TF,fill = 0)
-
-train_cl <- train_cl %>% 
-  mutate(TF = 1) %>% 
-  distinct %>% 
-  spread(gender,TF,fill = 0)
-
-train_cl <- train_cl %>% 
-  mutate(TF = 1) %>% 
-  distinct %>% 
-  spread(country_destination,TF,fill = 0)
-```
-
-After cleaning the data, I'll create a cluster dendrogram to determine the number of clusters to choose, then I'll create a cluster table to examine the data.
-
-``` r
-distances <- dist(train_cl, method = "euclidean")
-clusterTrain <- hclust(distances, method="ward")
-```
-
-    ## The "ward" method has been renamed to "ward.D"; note new "ward.D2"
-
-``` r
-plot(clusterTrain)
-```
-
-![](Airbnb_new_users_v2_files/figure-markdown_github/cluster2-1.png)
-
-``` r
-clusterGroups <- cutree(clusterTrain, k = 8) 
-tableCluster <- NULL
-for (i in 2:19) {
-   tableCluster <- rbind(tableCluster,tapply(train_cl[,i],clusterGroups, mean))
-}
-rnames <- as.vector(colnames(train_cl))
-rownames(tableCluster) <- rnames[2:19]
-tableCluster
-```
-
-    ##                            1           2           3           4
-    ## between 18 and 25 0.06549118 0.077239959 0.100000000 0.124239169
-    ## between 26 and 35 0.48068850 0.473395125 0.451381215 0.470819907
-    ## between 36 and 45 0.27959698 0.280466873 0.255801105 0.235947010
-    ## between 46 and 55 0.11293031 0.109165808 0.123204420 0.107769424
-    ## between 56 and 65 0.06129303 0.059732235 0.069613260 0.061224490
-    ## -unknown-         0.16918556 0.092344662 0.125966851 0.152524168
-    ## FEMALE            0.43366919 0.497082046 0.499447514 0.448979592
-    ## MALE              0.39714526 0.410573292 0.374585635 0.398496241
-    ## AU                0.01805206 0.020940611 0.030386740 0.013605442
-    ## CA                0.06003359 0.058015791 0.040883978 0.059434300
-    ## DE                0.04659950 0.055956059 0.048618785 0.049409237
-    ## ES                0.10033585 0.089598352 0.092265193 0.099176513
-    ## FR                0.23299748 0.198420872 0.225414365 0.185821697
-    ## GB                0.09739715 0.091658084 0.083977901 0.094522019
-    ## IT                0.10579345 0.093717817 0.097237569 0.107053348
-    ## NL                0.03442485 0.026433230 0.030939227 0.027926960
-    ## other             0.29429051 0.358736698 0.342541436 0.354099535
-    ## PT                0.01007557 0.006522485 0.007734807 0.008950949
-    ##                             5           6           7           8
-    ## between 18 and 25 0.111335013 0.155207077 0.158669575 0.223915592
-    ## between 26 and 35 0.481612091 0.481704865 0.461832061 0.427119969
-    ## between 36 and 45 0.252392947 0.197024528 0.195201745 0.187964048
-    ## between 46 and 55 0.097229219 0.096501809 0.111777535 0.101602188
-    ## between 56 and 65 0.057430730 0.069561721 0.072519084 0.059398202
-    ## -unknown-         0.202518892 0.203055891 0.193565976 0.193825713
-    ## FEMALE            0.417632242 0.413751508 0.410032715 0.404064088
-    ## MALE              0.379848866 0.383192602 0.396401309 0.402110199
-    ## AU                0.035768262 0.028548452 0.018538713 0.016803439
-    ## CA                0.054408060 0.037394451 0.052889858 0.065259867
-    ## DE                0.039294710 0.032971452 0.033260632 0.029308324
-    ## ES                0.065994962 0.073180539 0.083969466 0.083626417
-    ## FR                0.156675063 0.158021713 0.162486369 0.170379054
-    ## GB                0.082619647 0.081222356 0.091603053 0.081672528
-    ## IT                0.096725441 0.092882992 0.112868048 0.102774521
-    ## NL                0.033249370 0.025331725 0.022900763 0.037905432
-    ## other             0.425692695 0.464817049 0.414940022 0.402891755
-    ## PT                0.009571788 0.005629272 0.006543075 0.009378664
-
-As you can see from the data, in these three categories of variables, the highest values are always "between 26 and 35", "FEMALE", and "other".This made it very dificult to interpret the result. The rows with the highest values are essually the one with the highest number of observation, this is representitive of the proportion of reservations made by users with that profile. This also tells us that there isn't a very distinguished preference among different age groups and gender groups.
 
 ### Decision Tree
 
-Lastly, I'll take another chance of predicting country\_destinations using a decision tree model.
+In this model, I’ll create a subset of the `train` dataset and split the data into a training set and a testing set, then I'll create a decision three, and I'll compare the result between the predicted results and the actual results.
 
-I'll create a subset of the dataset and split the data into a training set and a testing set.
 
 ``` r
 train6 <- cbind.data.frame(train$age_cat,train$gender,train$language_full, train$country_destination,train$device_type, train$browser_type)
@@ -654,8 +574,6 @@ split <- sample.split(train6$country_destination, SplitRatio = 0.7)
 testing <- subset(train6, split == FALSE)
 training <- subset(train6, split == TRUE)
 ```
-
-Next, I'll create a decision three, and I'll compare the result between the predictions and the actual results.
 
 ``` r
 trainTree <- rpart(country_destination ~ gender + age_cat + language_full + device_type + browser_type, data=training, method="class", control=rpart.control(minbucket=1000))
@@ -685,18 +603,19 @@ table(testing$country_destination,PredictCART)
     ##   US        0     0     0     0     0     0     0 16059     0     0     0  2654
 
 
-As you can see from the decision tree, the model is only able to predict two outcomes. This is largely due to the fact that the dataset is unbalanced. The model predicted the country_destination correctly 60% of the time. 
+As you can see from the decision tree, the model is only able to predict two outcomes.  This could mean that regardless of age and gender US is the most preferred country_destination. The model predicted the country_destination correctly 60% of the time. 
 
 ### Conclusion
 
-In 2015, Airbnb was a young company looking for find its path in the global economy. Data science has helped pave the way for Airbnb to become a more mature company with increasing global impact.
+In 2015, Airbnb was a young company looking to find its path in the global economy. Data science has helped pave the way for Airbnb to become a more mature company with increasing global impact.
 
-In 2015, I would have made the following suggestion based on the analysis I've done in this project: 
+In 2015, I would have made the following suggestion based on the analysis I've done in this project:
 
-1. Focus on EU bookings. There are a lot of potential for growth there as they are popular tourist destinations for US guests. US and EU share similar culture which makes EU a perfect market for Airbnb to replicate its success in the US. 
+1. Focus on EU bookings. There are a lot of potential for growth there as they are popular tourist destinations for US guests. US and EU share similar culture which makes EU a perfect market for Airbnb to replicate its success in the US.
 
-2. Focus on China. Chinese is the second most used language by Airbnb users, which signifies the popularity of Airbnb among Chinese users. As China's economy continues to grow and Chinese citizens become increasing wealthy and more accustomed to the sharing economy. There's a huge business opportunity to expand business there before local competition monopolizing the market. 
+2. Focus on China. Chinese is the second most used language by Airbnb users, which signifies the popularity of Airbnb among Chinese users. As China's economy continues to grow and Chinese citizens become increasing wealthy and more accustomed to the sharing economy. There's a huge business opportunity to expand business there before local competition monopolizing the market.
 
-3. Continue to put an effort on strengthening the US booking while also making suggestion in popular European destination when someone chose English as their primary language. If language chosen is not English, make suggestion in countries using the same language as the user in additional to US listings.
+3. Continue to put an effort on strengthening the US bookings while also making suggestion in popular European destination when someone chose English as their primary language. If language chosen is not English, make suggestion in countries using the same language as the user in additional to US listings.
 
 As Airbnb increase its user base and collect more relevant search result, more meaningful and accurate prediction will be possible.
+
