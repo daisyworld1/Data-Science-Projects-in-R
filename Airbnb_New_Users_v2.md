@@ -458,7 +458,7 @@ Machine Learning
 
 ### Logistic Regression
 
-Before make the prediction, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attributes that are relevant to predicting the country_destination.
+Before making predictions, we need to have a new dataset that's suitable for the logistic regression model. We will remove any observations with missing values and only keep the attributes that are relevant to predicting the country_destination.
 By using logistic regression, we can find relationships between two variable where the predicted variable is binomial while holding other variables constant. In this case, I will explore the relationship between gender and the country_destination.
 
 ``` r
