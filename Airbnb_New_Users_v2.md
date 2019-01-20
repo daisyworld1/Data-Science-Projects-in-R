@@ -254,7 +254,7 @@ The Age of guests and the number of bookings made on Airbnb appear to be a right
 
 ### Time - Global
 
-We have two important time-related attributes - timestamp\_first\_active and date\_first\_booking. We are not considering date_account_created because this is the same date as timestamp\_first\_active. I created a column time_diff to show the number of days for a user to make the first reservation after the date they are first active on Airbnb. You’ll find that more than 50% of users make their first booking in the first three days. This graph appears to be a Poisson distribution. As time goes by, it is much less likely for someone to make a reservation on Airbnb.
+We have two important time-related attributes - timestamp\_first\_active and date\_first\_booking. We are not considering date_account_created because this is the same date as timestamp\_first\_active. I created a column time_diff to show the number of days for a user to make the first reservation after the date they are first active on Airbnb. You’ll find that more than 50% of users make their first booking in the first three days. 
 
 ``` r
 train3 <- train %>% filter(time_diff >= 0)
@@ -408,7 +408,7 @@ ggplot(train2_1 , aes(x = gender, y = age)) + geom_jitter(alpha = 0.2, width = 0
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2_1-3-1.png)
 
-This facet grid reaffirmed us of our previous analysis. It does provide us additional information. The travel age for males is slight high than the travel age for female. This tendency appears strong in Great Britain, Germany, and France. 
+This facet grid reaffirmed us of our previous analysis. It does provide us additional information. The travel age for males is slight higher than the travel age for female. This tendency appears strong in Great Britain, Germany, and France. 
 
 ### Choice of Technology (Device, Browser, OS) - Outside of US
 
