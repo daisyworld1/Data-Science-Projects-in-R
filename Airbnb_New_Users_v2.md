@@ -451,7 +451,7 @@ ggplot(train2, aes(x = signup_app, fill = country_destination)) + geom_bar(posit
 
 ![](Airbnb_new_users_v2_files/figure-markdown_github/train2-4-6.png)
 
-It does not seem like there’s a strong correlation between device type / signup\_app / browser type and country destination. Android users does show different proportion of country of destination; however, since the total number of users is not statistically significant.
+It does not seem like there’s a strong correlation between device type / signup\_app / browser type and country destination. Android users does show different proportion of country of destination; however, the total number of users is not statistically significant.
 
 Machine Learning
 ----------------
